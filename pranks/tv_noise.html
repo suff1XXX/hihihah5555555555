@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>No Signal</title>
+    <style>
+        body { margin: 0; overflow: hidden; cursor: none; }
+        canvas { display: block; }
+        .no-signal-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #0000aa; color: #fff; font-family: sans-serif; font-size: 5vw; padding: 1vw 2vw;
+            border: 0.5vw solid #fff; text-align: center;
+        }
+        .exit-message { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); color: #000; background: #fff8; padding: 5px; font-size: 12px; opacity: 0.2; transition: opacity 0.3s; }
+        .exit-message:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+    <canvas id="noise-canvas"></canvas>
+    <div class="no-signal-text">NO SIGNAL</div>
+    <div class="exit-message">Натисніть ESC, щоб вийти</div>
+    <script>
+        const canvas = document.getElementById('noise-canvas');
+        const ctx = canvas.getContext('2d');
+        let audioCtx, noiseNode;
+
+        function setup() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            try {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = Math.random() * 2 - 1;
+                }
+                noiseNode = audioCtx.createBufferSource();
+                noiseNode.buffer = buffer;
+                noiseNode.loop = true;
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Гучність
+                noiseNode.connect(gainNode).connect(audioCtx.destination);
+            } catch (e) {
+                console.error("Web Audio API is not supported in this browser or failed to start.");
+            }
+        }
+
+        function draw() {
+            const imageData = ctx.createImageData(canvas.width, canvas.height);
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const shade = Math.random() * 255;
+                data[i] = shade;
+                data[i + 1] = shade;
+                data[i + 2] = shade;
+                data[i + 3] = 255;
+            }
+            ctx.putImageData(imageData, 0, 0);
+            requestAnimationFrame(draw);
+        }
+
+        function startPrank() {
+            document.documentElement.requestFullscreen().then(() => {
+                if (audioCtx && audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                if (noiseNode) noiseNode.start(0);
+            }).catch(console.error);
+        }
+        
+        setup();
+        draw();
+        
+        // Починаємо звук після першого кліку або взаємодії
+        document.body.addEventListener('click', startPrank, { once: true });
+        
+        window.addEventListener('keydown', e => { 
+            if (e.key === 'Escape') { 
+                if (audioCtx) audioCtx.close();
+                if (document.fullscreenElement) document.exitFullscreen();
+                window.close();
+            }
+        });
+        window.addEventListener('resize', setup);
+    </script>
+</body>
+</html>

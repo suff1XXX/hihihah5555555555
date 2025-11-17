@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Installing Updates...</title>
+    <style>
+        body {
+            background-color: #0078d7;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+            cursor: none;
+        }
+        .container {
+            transform: scale(1.2);
+        }
+        .spinner {
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 5px solid #fff;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        h1 {
+            font-size: 2em;
+            font-weight: 300;
+        }
+        p {
+            font-size: 1.2em;
+            font-weight: 300;
+        }
+        .percentage {
+            font-size: 3em;
+            font-weight: 200;
+            margin: 20px 0;
+        }
+                 .exit-message {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.2; /* Змінено */
+            font-size: 14px; /* Змінено */
+            transition: opacity 0.3s;
+        }
+        .exit-message:hover {
+            opacity: 1; /* Додано */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="spinner"></div>
+        <h1>Working on updates</h1>
+        <div class="percentage">0% complete</div>
+        <p>Don't turn off your computer</p>
+    </div>
+    <div class="exit-message">Натисніть ESC, щоб вийти</div>
+
+    <script>
+        const percentageText = document.querySelector('.percentage');
+        let percent = 0;
+
+        function updateProgress() {
+            let increment = Math.random() < 0.8 ? 1 : 0; // Шанс "зависнути"
+            if (percent < 99) {
+                percent += increment;
+            } else {
+                 // Зависаємо на 99%
+            }
+            percentageText.textContent = `${percent}% complete`;
+            
+            setTimeout(updateProgress, Math.random() * 1500 + 200);
+        }
+
+        setTimeout(updateProgress, 1000);
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                window.close();
+                window.location.href = '../index.html';
+            }
+        });
+    </script>
+</body>
+</html>
