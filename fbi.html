@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATTENTION!</title>
+    <style>
+        body { background: #000; color: #fff; font-family: Arial, sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center; padding: 20px; cursor: none; }
+        .stop-sign { font-size: 100px; color: red; border: 5px solid red; border-radius: 50%; width: 150px; height: 150px; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; }
+        h1 { color: red; font-size: 3em; margin: 0; }
+        h2 { font-size: 2em; }
+        p { max-width: 800px; }
+        .exit-message { position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 12px; opacity: 0.2; transition: opacity 0.3s; }
+        .exit-message:hover { opacity: 1; }
+    </style>
+</head>
+<body>
+    <div class="stop-sign">STOP</div>
+    <h1>FBI WARNING</h1>
+    <h2>This computer has been locked due to suspicion of illegal activity.</h2>
+    <p>Your IP address has been logged. Any attempt to bypass this lock will result in immediate dispatch of a tactical unit to your location. You are accused of viewing and distributing prohibited materials. To unlock your computer, you must pay a fine of $500.</p>
+    <div class="exit-message">Натисніть ESC, щоб вийти</div>
+    <script>
+        document.documentElement.requestFullscreen().catch(console.error);
+        window.addEventListener('keydown', e => { if (e.key === 'Escape') { if (document.fullscreenElement) document.exitFullscreen(); window.close(); }});
+    </script>
+</body>
+</html>
